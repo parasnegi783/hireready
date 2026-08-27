@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const pdf = await extractText(new Uint8Array(arrayBuffer));
 
     return NextResponse.json({
-      text: pdf.text,
+      text: Array.isArray(pdf.text) ? pdf.text.join("\n\n") : pdf.text,
       pages: pdf.totalPages,
       fileName: file.name,
       fileSize: file.size,
