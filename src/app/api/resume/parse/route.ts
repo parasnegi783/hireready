@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/legacy/build/pdf.mjs";
-
-// Disable worker — not needed in server-side Node.js
-GlobalWorkerOptions.workerSrc = "";
+import { extractText } from "unpdf";
 
 export const dynamic = "force-dynamic";
 
@@ -23,25 +20,11 @@ export async function POST(request: NextRequest) {
     }
 
     const arrayBuffer = await file.arrayBuffer();
-    const uint8Array = new Uint8Array(arrayBuffer);
-
-    const doc = await getDocument({ data: uint8Array, useWorkerFetch: false, isEvalSupported: false, useSystemFonts: true }).promise;
-
-    let fullText = "";
-    for (let i = 1; i <= doc.numPages; i++) {
-      const page = await doc.getPage(i);
-      const content = await page.getTextContent();
-      const pageText = content.items
-        .map((item: any) => item.str)
-        .join(" ");
-      fullText += pageText + "\n\n";
-    }
-
-    doc.destroy();
+    const pdf = await extractText(new Uint8Array(arrayBuffer));
 
     return NextResponse.json({
-      text: fullText.trim(),
-      pages: doc.numPages,
+      text: pdf.text,
+      pages: pdf.totalPages,
       fileName: file.name,
       fileSize: file.size,
     });
