@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -51,6 +51,16 @@ export default function LoginPage() {
   const [resetSent, setResetSent] = useState(false);
   const [confirmSent, setConfirmSent] = useState(false);
   const [role, setRole] = useState<"student" | "tpo">("student");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const urlError = params.get("error");
+      const urlReset = params.get("reset");
+      if (urlError) setError(decodeURIComponent(urlError));
+      if (urlReset) setResetSent(true);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
