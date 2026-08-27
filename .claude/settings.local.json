@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(kill 5363)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(curl -s --max-time 5 https://rspspzuzvvqyltjrqmps.supabase.co/rest/v1/ -H \"apikey: $\\(grep NEXT_PUBLIC_SUPABASE_ANON_KEY /Users/parasnegi/Documents/Projects/hireready/.env.local)"
+    ]
+  }
+}
