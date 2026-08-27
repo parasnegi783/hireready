@@ -14,6 +14,9 @@ export async function signInWithGoogle() {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
+    if (data?.url) {
+      window.location.href = data.url;
+    }
     return { data, error };
   } catch (err: any) {
     return {
